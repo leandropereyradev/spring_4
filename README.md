@@ -2,6 +2,7 @@
 1. [Nivel 1 - Tarea 1](#nivel-1)
 2. [Nivel 2 - Tarea 1](#nivel-2)
 3. [Nivel 3 - Tarea 1](#nivel-3)
+4. [Nivel 1 - Tarea 1](#nivel-4)
 
 ---
 ---
@@ -137,3 +138,30 @@ Tendrás que entregar dos capturas de pantalla, una por la ejecución de cada en
 
 ## [Volver al Índice](#índice)
 ---
+
+# Nivel 1
+
+Tenemos una entidad llamada "Fruta", que dispone de las siguientes propiedades:
+
+int id
+String nombre
+Int cantidadQuilos
+
+Aprovechando la especificación  JPA , deberás persistir esta entidad en una base de datos  H2 , siguiendo el patrón  MVC . Para ello, dependiendo del Package principal, crearás una estructura de packages, donde ubicarás las clases que necesites:
+
+controllers
+model.domain
+model.services
+model.repository
+
+La clase ubicada en el paquete controllers (FruitaController, por ejemplo), deberá ser capaz de dar respuesta a las siguientes peticiones para actualizar y consultar información:
+
+<a href="http://localhost:8080/fruta/add" target="_blank">http://localhost:8080/fruta/add</a>
+
+<a href="http://localhost:8080/fruta/update" target="_blank">http://localhost:8080/fruta/update</a>
+
+<a href="http://localhost:8080/fruta/delete" target="_blank">http://localhost:8080/fruta/delete/{id}</a>
+
+<a href="http://localhost:8080/fruta/getOne" target="_blank">http://localhost:8080/fruta/getOne/{id}</a>
+
+<a href="http://localhost:8080/fruta/getAll" target="_blank">http://localhost:8080/fruta/getAll</a>
