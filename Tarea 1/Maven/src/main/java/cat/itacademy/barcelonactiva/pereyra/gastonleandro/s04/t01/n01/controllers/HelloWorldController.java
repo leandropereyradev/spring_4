@@ -13,7 +13,7 @@ public class HelloWorldController {
 
     @GetMapping({"/HelloWorld2", "/HelloWorld2/{name}"})
     public String greets2(@PathVariable(required = false) String name){
-        if (name == null) name = "";
+        if (name == null) name = "UNKNOWN";
 
         return "Hola, " + name + ". Estás ejecutando un proyecto Maven";
     }
