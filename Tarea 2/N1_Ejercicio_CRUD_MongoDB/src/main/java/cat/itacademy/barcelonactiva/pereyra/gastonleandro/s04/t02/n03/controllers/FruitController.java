@@ -4,7 +4,6 @@ import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n03.models.dom
 import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n03.models.services.FruitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,22 +21,15 @@ public class FruitController {
     @Autowired
     private FruitService fruitService;
 
-    private HttpHeaders createHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("token", "token-value");
-
-        return headers;
-    }
-
     @PostMapping("/add")
     public ResponseEntity<List<Fruit>> addFruits(@RequestBody List<Fruit> fruits) {
         try {
             List<Fruit> addedFruits = fruitService.addFruits(fruits);
-            return new ResponseEntity<>(addedFruits, createHeaders(), HttpStatus.CREATED);
+            return ResponseEntity.ok(addedFruits);
 
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -52,7 +44,7 @@ public class FruitController {
 
         } catch (Exception e) {
             log.error("Error updating fruit: {}", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -66,7 +58,7 @@ public class FruitController {
 
         } catch (Exception e) {
             log.error("Error deleting fruit: {}", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -82,7 +74,7 @@ public class FruitController {
 
         } catch (Exception e) {
             log.error("Error getting all fruits: {}", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -94,7 +86,7 @@ public class FruitController {
 
         } catch (Exception e) {
             log.error("Error getting fruit by ID: {}", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
