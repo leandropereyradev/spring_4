@@ -1,9 +1,8 @@
 package cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n01.controllers;
 
 import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n01.models.domains.Fruit;
-import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n01.models.services.FruitService;
+import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n01.models.services.FruitServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,74 +18,43 @@ import java.util.stream.StreamSupport;
 public class FruitController {
 
     @Autowired
-    private FruitService fruitService;
+    private FruitServiceImpl fruitService;
 
     @PostMapping("/add")
     public ResponseEntity<List<Fruit>> addFruits(@RequestBody List<Fruit> fruits) {
-        try {
-            List<Fruit> addedFruits = fruitService.addFruits(fruits);
-            return ResponseEntity.ok(addedFruits);
+        List<Fruit> addedFruits = fruitService.addFruits(fruits);
 
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(addedFruits);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Fruit> updateFruit(@PathVariable int id, @RequestBody Fruit fruit) {
-        try {
-            Fruit updatedFruit = fruitService.updateFruit(id, fruit);
+        Fruit updatedFruit = fruitService.updateFruit(id, fruit);
 
-            if (updatedFruit == null) return ResponseEntity.notFound().build();
-
-            return ResponseEntity.ok(updatedFruit);
-
-        } catch (Exception e) {
-            log.error("Error updating fruit: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(updatedFruit);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteFruit(@PathVariable int id) {
-        try {
-            boolean isDeleted = fruitService.deleteFruit(id);
-            if (!isDeleted) return ResponseEntity.notFound().build();
+        fruitService.deleteFruit(id);
 
-            return ResponseEntity.noContent().build();
-
-        } catch (Exception e) {
-            log.error("Error deleting fruit: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/getAll")
     public ResponseEntity<List<Fruit>> getAllFruits() {
-        try {
-            Iterable<Fruit> fruitIterable = fruitService.getAllFruits();
+        Iterable<Fruit> fruitIterable = fruitService.getAllFruits();
 
-            List<Fruit> fruits = StreamSupport.stream(fruitIterable.spliterator(), false)
-                    .collect(Collectors.toList());
+        List<Fruit> fruits = StreamSupport.stream(fruitIterable.spliterator(), false)
+                .collect(Collectors.toList());
 
-            return ResponseEntity.ok(fruits);
-
-        } catch (Exception e) {
-            log.error("Error getting all fruits: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(fruits);
     }
 
     @GetMapping("/getOne/{id}")
     public ResponseEntity<Fruit> getFruitById(@PathVariable int id) {
-        try {
-            Optional<Fruit> fruit = fruitService.getFruitById(id);
-            return fruit.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Fruit> fruit = fruitService.getFruitById(id);
 
-        } catch (Exception e) {
-            log.error("Error getting fruit by ID: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return fruit.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

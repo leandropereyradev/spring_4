@@ -1,6 +1,5 @@
 package cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n03.models.domains;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

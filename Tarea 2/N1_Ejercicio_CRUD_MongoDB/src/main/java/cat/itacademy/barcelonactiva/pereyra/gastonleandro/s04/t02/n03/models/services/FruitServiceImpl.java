@@ -1,5 +1,7 @@
 package cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n03.models.services;
 
+import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n03.exceptions.FruitAddException;
+import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n03.exceptions.FruitNotFoundException;
 import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n03.models.domains.Fruit;
 import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n03.models.repository.FruitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,20 +13,26 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class FruitService {
+public class FruitServiceImpl implements IFruitService {
     @Autowired
     private FruitRepository fruitRepository;
 
+    @Override
     @Transactional
     public List<Fruit> addFruits(List<Fruit> fruits) {
-        List<Fruit> addedFruits = new ArrayList<>();
+        try {
+            List<Fruit> addedFruits = new ArrayList<>();
 
-        for (Fruit fruit : fruits) addedFruits.add(fruitRepository.save(fruit));
+            for (Fruit fruit : fruits) addedFruits.add(fruitRepository.save(fruit));
 
-        return addedFruits;
+            return addedFruits;
+
+        } catch (Exception e) {
+            throw new FruitAddException("Failed to add fruits", e);
+        }
     }
 
-
+    @Override
     @Transactional
     public Fruit updateFruit(String id, Fruit fruit) {
         try {
@@ -43,14 +51,15 @@ public class FruitService {
         }
     }
 
+    @Override
     @Transactional
-    public boolean deleteFruit(String id) {
+    public void deleteFruit(String id) {
         try {
             Optional<Fruit> existingFruit = fruitRepository.findById(id);
-            if (existingFruit.isEmpty()) return false;
+
+            if (existingFruit.isEmpty()) throw new FruitNotFoundException("Fruit with ID " + id + " not found");
 
             fruitRepository.deleteById(id);
-            return true;
 
         } catch (Exception e) {
             System.err.println("Error deleting fruit: " + e.getMessage());
@@ -58,6 +67,8 @@ public class FruitService {
         }
     }
 
+
+    @Override
     @Transactional(readOnly = true)
     public Iterable<Fruit> getAllFruits() {
         try {
@@ -69,6 +80,7 @@ public class FruitService {
         }
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Optional<Fruit> getFruitById(String id) {
         try {
