@@ -13,6 +13,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
+    @ExceptionHandler(FruitDeleteException.class)
+    public ResponseEntity<String> handleFruitDeleteException(FruitDeleteException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
+    @ExceptionHandler(FruitUpdateException.class)
+    public ResponseEntity<String> handleFruitUpdateException(FruitUpdateException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
+    @ExceptionHandler(FruitGetAllException.class)
+    public ResponseEntity<String> handleFruitGetAllException(FruitGetAllException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
     @ExceptionHandler(FruitNotFoundException.class)
     public ResponseEntity<String> handleFruitNotFoundException(FruitNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

@@ -1,7 +1,6 @@
 package cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n01.models.services;
 
-import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n01.exceptions.FruitAddException;
-import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n01.exceptions.FruitNotFoundException;
+import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n01.exceptions.*;
 import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n01.models.domains.Fruit;
 import cat.itacademy.barcelonactiva.pereyra.gastonleandro.s04.t02.n01.models.repository.FruitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class FruitServiceImpl implements IFruitService {
 
             return addedFruits;
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new FruitAddException("Failed to add fruits", e);
         }
     }
@@ -35,14 +34,18 @@ public class FruitServiceImpl implements IFruitService {
     @Override
     @Transactional
     public Fruit updateFruit(int id, Fruit fruit) {
-        Optional<Fruit> existingFruit = fruitRepository.findById(id);
-        if (existingFruit.isEmpty()) throw new FruitNotFoundException("Fruit with ID " + id + " not found");
+        try {
+            Optional<Fruit> existingFruit = fruitRepository.findById(id);
+            if (existingFruit.isEmpty()) throw new FruitNotFoundException("Fruit with ID " + id + " not found");
 
-        Fruit fruitToUpdate = existingFruit.get();
-        fruitToUpdate.setName(fruit.getName());
-        fruitToUpdate.setQuantityKilo(fruit.getQuantityKilo());
+            Fruit fruitToUpdate = existingFruit.get();
+            fruitToUpdate.setName(fruit.getName());
+            fruitToUpdate.setQuantityKilo(fruit.getQuantityKilo());
 
-        return fruitRepository.save(fruitToUpdate);
+            return fruitRepository.save(fruitToUpdate);
+        } catch (RuntimeException e) {
+            throw new FruitUpdateException("Failed to update fruit", e);
+        }
     }
 
     @Override
@@ -55,9 +58,8 @@ public class FruitServiceImpl implements IFruitService {
 
             fruitRepository.deleteById(id);
 
-        } catch (Exception e) {
-            System.err.println("Error deleting fruit: " + e.getMessage());
-            throw new RuntimeException("Failed to delete fruit", e);
+        } catch (RuntimeException e) {
+            throw new FruitDeleteException("Failed to delete fruit", e);
         }
     }
 
@@ -67,9 +69,8 @@ public class FruitServiceImpl implements IFruitService {
         try {
             return fruitRepository.findAll();
 
-        } catch (Exception e) {
-            System.err.println("Error retrieving all fruits: " + e.getMessage());
-            throw new RuntimeException("Failed to retrieve all fruits", e);
+        } catch (RuntimeException e) {
+            throw new FruitGetAllException("Failed to retrieve all fruits", e);
         }
     }
 
@@ -79,9 +80,8 @@ public class FruitServiceImpl implements IFruitService {
         try {
             return fruitRepository.findById(id);
 
-        } catch (Exception e) {
-            System.err.println("Error retrieving fruit by ID: " + e.getMessage());
-            throw new RuntimeException("Failed to retrieve fruit by ID", e);
+        } catch (RuntimeException e) {
+            throw new FruitNotFoundException("Failed to retrieve fruit by ID", e);
         }
     }
 }
