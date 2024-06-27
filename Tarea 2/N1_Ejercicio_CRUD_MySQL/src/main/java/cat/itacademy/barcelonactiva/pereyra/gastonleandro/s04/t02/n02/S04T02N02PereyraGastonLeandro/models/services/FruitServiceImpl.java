@@ -27,7 +27,7 @@ public class FruitServiceImpl implements IFruitService {
             return addedFruits;
 
         } catch (Exception e) {
-            throw new FruitAddException("Failed to add fruits", e);
+            throw new FruitServiceException("Failed to add fruits", e);
         }
     }
 
@@ -36,7 +36,7 @@ public class FruitServiceImpl implements IFruitService {
     public Fruit updateFruit(int id, Fruit fruit) {
         try {
             Optional<Fruit> existingFruit = fruitRepository.findById(id);
-            if (existingFruit.isEmpty()) throw new FruitNotFoundException("Fruit with ID " + id + " not found");
+            if (existingFruit.isEmpty()) throw new FruitServiceException("Fruit with ID " + id + " not found");
 
             Fruit fruitToUpdate = existingFruit.get();
             fruitToUpdate.setName(fruit.getName());
@@ -44,7 +44,7 @@ public class FruitServiceImpl implements IFruitService {
 
             return fruitRepository.save(fruitToUpdate);
         } catch (RuntimeException e) {
-            throw new FruitUpdateException("Failed to update fruit", e);
+            throw new FruitServiceException("Failed to update fruit", e);
         }
     }
 
@@ -54,12 +54,12 @@ public class FruitServiceImpl implements IFruitService {
         try {
             Optional<Fruit> existingFruit = fruitRepository.findById(id);
 
-            if (existingFruit.isEmpty()) throw new FruitNotFoundException("Fruit with ID " + id + " not found");
+            if (existingFruit.isEmpty()) throw new FruitServiceException("Fruit with ID " + id + " not found");
 
             fruitRepository.deleteById(id);
 
         } catch (RuntimeException e) {
-            throw new FruitDeleteException("Failed to delete fruit", e);
+            throw new FruitServiceException("Failed to delete fruit", e);
         }
     }
 
@@ -70,7 +70,7 @@ public class FruitServiceImpl implements IFruitService {
             return fruitRepository.findAll();
 
         } catch (RuntimeException e) {
-            throw new FruitGetAllException("Failed to retrieve all fruits", e);
+            throw new FruitServiceException("Failed to retrieve all fruits", e);
         }
     }
 
@@ -81,7 +81,7 @@ public class FruitServiceImpl implements IFruitService {
             return fruitRepository.findById(id);
 
         } catch (RuntimeException e) {
-            throw new FruitNotFoundException("Failed to retrieve fruit by ID", e);
+            throw new FruitServiceException("Failed to retrieve fruit by ID", e);
         }
     }
 }
